@@ -1,8 +1,22 @@
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
+const mongoose = require("mongoose");
 const producerRoutes = require("../api/routes/producers");
 const movieRoutes = require("..//api/routes/movies");
+
+
+
+//connect to mongodb
+mongoose.connect(process.env.mongoDBURL, (err) => {
+   if (err){
+        console.error("Error", err.message);
+   }
+    else{
+       console.log("MongoDB connection successful");
+    }
+});
+
 
 //middleware for loging
 app.use(morgan("dev"))
@@ -51,6 +65,10 @@ app.use((error, req, res, next) => {
         }
     });
 });
+
+
+
+
 
 
 
