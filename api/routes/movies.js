@@ -4,8 +4,34 @@ const router = express.Router();
 const Movie = require("../routes/models/movie");
 
 router.get("/", (req,res,next) => {
-    res.json({
-        message: "Movie-GET"
+    const getMovie = {
+        title: req.body.title,
+        producer: req.body.producer
+    };
+    Movie.find({
+        title: req.body.title,
+        producer: req.body.producer
+    }, )
+        .then(result => {
+        res.status(200).json({
+            message: "GET Movie",
+            movie: {
+                title: result.title,
+                producer: result.producer,
+            },
+            metadata: {
+                host: req.hostname,
+                method: req.method,
+            }
+        });
+    })
+    .catch(err => {
+        console.error(err.message);
+        res.status(500).json({
+            error: {
+                message: err.message
+            }
+        });
     });
 });
 
@@ -44,26 +70,102 @@ router.post("/", (req,res,next) => {
 
 router.get("/:movieId", (req,res,next) => {
     const movieId = req.params.movieId;
-    res.json({
-        message: "Movie-GETbyID",
-        id: movieId
+    const getMovieId = {
+        title: req.body.title,
+        producer: req.body.producer
+    };
+    Movie.findById({
+        _id:movieId,
+    } )
+        .then(result => {
+        res.status(200).json({
+            message: "GET Movie by Id",
+            movie: {
+                title: result.title,
+                producer: result.producer,
+                id: result._id
+            },
+            metadata: {
+                host: req.hostname,
+                method: req.method,
+
+            }
+        });
+    })
+    .catch(err => {
+        console.error(err.message);
+        res.status(500).json({
+            error: {
+                message: err.message
+            }
+        });
     });
 });
 
 router.patch("/:movieId", (req,res,next) => {
     const movieId = req.params.movieId;
-    res.json({
-        message: "Movie-PATCHbyID",
-        id: movieId
-    });
+    const updatedMovie = {
+        title: req.body.title,
+        producer: req.body.producer
+    };
+    Movie.updateOne({
+        _id:movieId,
+    }, {
+        $set: updatedMovie
+    }).then(result => {
+        res.status(200).json({
+            message: "Updated Movie",
+            movie: {
+                title: result.title,
+                producer: result.producer,
+                id: result._id
+            },
+            metadata: {
+                host: req.hostname,
+                method: req.method,
+            }
+        })
+    })
+    .catch(err => {
+        res.status(500).json({
+            error:{
+                message: err.message
+            }
+        })
+    })
 });
 
 router.delete("/:movieId", (req,res,next) => {
     const movieId = req.params.movieId;
-    res.json({
-        message: "Movie-DELETEbyID",
-        id: movieId
-    });
+    const deleteMovie = {
+        title: req.body.title,
+        producer: req.body.producer
+    };
+    Movie.deleteOne({
+        _id: movieId
+    },{
+        $set: deleteMovie
+    }).then (result => {
+        res.status(200).json({
+            message: "Movie Deleted",
+            movie: {
+                title: result.title,
+                producer: result.producer,
+                id: result._id
+            },
+            metadata: {
+                host: req.hostname,
+                method: req.method,
+            }
+        })
+    })
+    .catch(err => {
+        res.status(500).json({
+            error:{
+                message: err.message
+            }
+        })
+    })
 });
 
 module.exports = router;

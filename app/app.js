@@ -6,18 +6,6 @@ const producerRoutes = require("../api/routes/producers");
 const movieRoutes = require("..//api/routes/movies");
 
 
-
-//connect to mongodb
-mongoose.connect(process.env.mongoDBURL, (err) => {
-   if (err){
-        console.error("Error", err.message);
-   }
-    else{
-       console.log("MongoDB connection successful");
-    }
-});
-
-
 //middleware for loging
 app.use(morgan("dev"))
 
@@ -61,15 +49,22 @@ app.use((error, req, res, next) => {
     res.status(error.status || 500).json({
         error: {
             message: error.message,
-            status: error.status
+            status: error.status,
+            method: req.method
         }
     });
 });
 
 
-
-
-
+mongoose.connect(process.env.mongoDBURL, (err) => {
+    if (err){
+         console.error("Error", err.message);
+    }
+     else{
+        console.log("MongoDB connection successful");
+     }
+ });
+ 
 
 
 module.exports = app;
