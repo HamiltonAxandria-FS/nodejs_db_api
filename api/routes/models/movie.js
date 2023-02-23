@@ -2,8 +2,14 @@ const mongoose = require("mongoose");
 
 const movieSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    title: String,
-    producer: String
+    title: {
+        type: String,
+        required: true
+    },
+    producer: {
+        type: String,
+        required: true
+    }
 });
 
 
