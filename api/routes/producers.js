@@ -139,7 +139,7 @@ router.delete("/:producerId", (req,res,next) => {
     .populate("Movie", "title", "producer")
     .exec()
     .then(result =>{
-        res.status(200).json({
+        res.status(201).json({
             message: producer_deleted,
             request: {
                 method: "GET",
